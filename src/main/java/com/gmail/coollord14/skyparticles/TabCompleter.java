@@ -322,9 +322,9 @@ public class TabCompleter implements TabExecutor {
 			return;
 		}
 		Particle particle;
-		Double distance = 1.0;
-		Integer count = 1;
-		Double speed = 0.5;
+		double distance = 1.0;
+		int count = 1;
+		double speed = 0.5;
 
 		if(args.length < 4)  {
 			Methods.sendMessage(true, true, sender, "&cYou must specify location name, particle type, and render distance.");
