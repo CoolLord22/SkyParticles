@@ -1,0 +1,11 @@
+name: SkyParticles
+authors: [CoolLord22]
+soft-depend: [WorldEdit, WorldGuard]
+main: com.gmail.coollord14.skyparticles.Main
+version: 3.0
+load: POSTWORLD
+description: Create particle in regions!
+commands:
+    sp:
+        aliases: [skyparticles]
+        description: Type /sp help for more information!
