@@ -6,6 +6,7 @@ The plugin is lightweight and spawns particles only for users who have toggled t
 automatic config checker that will disable any misconfigured particle displays (for when users try to make changes
 directly to the config rather than the in-game creator) to prevent any errors from appearing in the console. It'll
 even warn the user when a setup is misconfigured, and automatically disable it as well!
+
 ---
 
 ### Plugin Setup
