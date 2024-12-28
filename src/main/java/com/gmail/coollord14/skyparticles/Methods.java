@@ -96,7 +96,7 @@ public class Methods {
 		return;
 	}
 
-	public static Location getLocation(final String sp, final String corner, Main plugin) {
+	public static Location getLocation(String sp, String corner, Main plugin) {
 		final int x = plugin.getConfig().getInt("particles." + sp + "." + corner + ".x");
 		final int y = plugin.getConfig().getInt("particles." + sp + "." + corner + ".y");
 		final int z = plugin.getConfig().getInt("particles." + sp + "." + corner + ".z");
