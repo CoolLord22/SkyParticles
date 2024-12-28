@@ -263,8 +263,10 @@ public class TabCompleter implements TabExecutor {
 			if(!enabled)
 				Methods.sendMessage(true, true, sender, "&cThat location is already disabled.");
 			else {
-				plugin.getConfig().set("particles." + args[0] + ".enabled", false);
-				Methods.sendMessage(true, true, sender, "&cDisabled location &e" + args[0] + "&c.");
+				if(!Methods.checkCorrectness(plugin, sender)) {
+					plugin.getConfig().set("particles." + args[0] + ".enabled", false);
+					Methods.sendMessage(true, true, sender, "&cDisabled location &e" + args[0] + "&c.");
+				}
 			}
 		}
 		else Methods.sendMessage(true, true, sender, "&cThe location you suggested couldn't be found.");
