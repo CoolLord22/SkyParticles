@@ -1,6 +1,6 @@
 package com.gmail.coollord14.skyparticles;
 
-import java.util.ArrayList;
+import java.util.HashSet;
 
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
@@ -22,25 +22,23 @@ public class ParticleListener implements Listener {
 	@EventHandler
 	public void onMove(PlayerMoveEvent e) {
 		Player player = e.getPlayer();
-		if(plugin.getConfig().getConfigurationSection("particles") != null) 
-			if(plugin.getConfig().getConfigurationSection("particles").getKeys(false).size() > 0) {
-				ArrayList<String> particleToSend = new ArrayList<String>();
-				for(String particle : plugin.getConfig().getConfigurationSection("particles").getKeys(false)) {
-					if(plugin.getConfig().getBoolean("particles." + particle + ".enabled")) {
-						Location min = Methods.getPos("min", Methods.getLocation(particle, "pos1", plugin), Methods.getLocation(particle, "pos2", plugin));
-						Location max = Methods.getPos("max", Methods.getLocation(particle, "pos1", plugin), Methods.getLocation(particle, "pos2", plugin));
-						if(Methods.isContained(player.getLocation(), min, max))
-							particleToSend.add(particle);
-					}
+
+		HashSet<SkyParticle> particlesToSend = new HashSet<>();
+		if(!Main.toggled.contains(player.getUniqueId().toString())) {
+			for(SkyParticle registeredParticle : Main.registeredParticles.values()) {
+				if(registeredParticle.isEnabled()) {
+					Location min = registeredParticle.getMin();
+					Location max = registeredParticle.getMax();
+					if(Methods.isContained(player.getLocation(), min, max))
+						particlesToSend.add(registeredParticle);
 				}
-				Main.sendParticleTo.put(e.getPlayer(), particleToSend);
 			}
+		}
+		Main.sendParticleTo.put(e.getPlayer().getUniqueId(), particlesToSend);
 	}
 
 	@EventHandler
 	public void onJoin(PlayerJoinEvent e) {
-		if(!Main.sendParticleTo.containsKey(e.getPlayer())) {
-			Main.sendParticleTo.put(e.getPlayer(), new ArrayList<String>());
-		}
+		Main.sendParticleTo.put(e.getPlayer().getUniqueId(), new HashSet<>());
 	}
 }

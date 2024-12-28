@@ -3,11 +3,7 @@ package com.gmail.coollord14.skyparticles;
 import java.util.ArrayList;
 import java.util.Arrays;
 
-import org.bukkit.Bukkit;
-import org.bukkit.ChatColor;
-import org.bukkit.Location;
-import org.bukkit.Particle;
-import org.bukkit.World;
+import org.bukkit.*;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
@@ -28,6 +24,7 @@ public class Methods {
 		if(plugin.getConfig().getConfigurationSection("particles." + name) != null) {
 			plugin.getConfig().set("particles." + name, null);
 			plugin.saveConfig();
+			Main.registeredParticles.remove(name);
 			sendMessage(true, true, player, "&aYou have deleted " + ChatColor.YELLOW + name);
 		}
 		else sendMessage(true, true, player, "&cThe location you suggested couldn't be found.");
@@ -124,6 +121,8 @@ public class Methods {
 	}
 
 	public static boolean checkCorrectness(Main plugin, CommandSender sender) {
+		Main.registeredParticles.clear();
+		Main.sendParticleTo.clear();
 		boolean errors = false;
 		for(String name : plugin.getConfig().getConfigurationSection("particles").getKeys(false)) {
 			ArrayList<String> requirements = new ArrayList<>(Arrays.asList("particle", "distance", "count", "speed", "world", "pos1.x", "pos1.y", "pos1.z", "pos2.x", "pos2.y", "pos2.z"));
@@ -141,11 +140,27 @@ public class Methods {
 				plugin.getConfig().set("particles." + name + ".enabled", false);
 				plugin.saveConfig();
 				Methods.sendMessage(true, true, sender, "&aThe particle location &e" + name + " &acontains a particle type which is not supported and was automatically disabled.");
-			}
-			
-			if(!missing.isEmpty()) {
+			} else if(!missing.isEmpty()) {
 				errors = true;
 				Methods.sendMessage(true, true, sender, "&aThe particle location &e" + name + " &ais missing &e" + String.join("&a, &e", missing) + " &aand was automatically disabled.");
+			} else {
+				try {
+					Particle particle = Particle.valueOf(plugin.getConfig().getString("particles." + name + ".particle"));
+					double distance = plugin.getConfig().getDouble("particles." + name + ".distance");
+					int count = plugin.getConfig().getInt("particles." + name + ".count");
+					double speed = plugin.getConfig().getDouble("particles." + name + ".speed");
+					boolean enabled = plugin.getConfig().getBoolean("particles." + name + ".enabled", false);
+					Location min = Methods.getPos("min", Methods.getLocation(name, "pos1", plugin), Methods.getLocation(name, "pos2", plugin));
+					Location max = Methods.getPos("max", Methods.getLocation(name, "pos1", plugin), Methods.getLocation(name, "pos2", plugin));
+
+					SkyParticle sp = new SkyParticle(name, particle, distance, count, speed, enabled, min, max);
+					Main.registeredParticles.put(name, sp);
+				} catch (IllegalArgumentException e) {
+					errors = true;
+					plugin.getConfig().set("particles." + name + ".enabled", false);
+					plugin.saveConfig();
+					Methods.sendMessage(true, true, sender, "&aThe particle location &e" + name + " &acontains an invalid particle type and was automatically disabled.");
+				}
 			}
 		}
 		return errors;
