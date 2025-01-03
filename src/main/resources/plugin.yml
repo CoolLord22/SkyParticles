@@ -2,7 +2,7 @@ name: SkyParticles
 authors: [CoolLord22]
 soft-depend: [WorldEdit, WorldGuard]
 main: com.gmail.coollord14.skyparticles.Main
-version: 3.0
+version: ${project.version}
 load: POSTWORLD
 description: Create particle in regions!
 commands:
