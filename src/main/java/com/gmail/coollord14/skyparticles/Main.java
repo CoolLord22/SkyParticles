@@ -50,7 +50,7 @@ public class Main extends JavaPlugin {
 	public void loadParticleSender() {
 		plugin.getServer().getScheduler().runTaskTimerAsynchronously(plugin, () -> {
 			for(Player p : Bukkit.getOnlinePlayers()) {
-				for(SkyParticle sp : sendParticleTo.get(p.getUniqueId())) {
+				for(SkyParticle sp : sendParticleTo.getOrDefault(p.getUniqueId(), new HashSet<>())) {
 					if(sp.isEnabled()) {
 						p.spawnParticle(sp.getParticle(), p.getLocation().getX(), p.getLocation().getY(), p.getLocation().getZ(), sp.getCount(), sp.getDistance(), sp.getDistance(), sp.getDistance(), sp.getSpeed(), null);
 					}
