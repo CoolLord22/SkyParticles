@@ -82,7 +82,7 @@ public class Main extends JavaPlugin {
 	}
 
 	public static void updateToggles() {
-		plugin.getServer().getScheduler().runTaskAsynchronously(plugin, (Runnable) () -> {
+		plugin.getServer().getScheduler().runTaskAsynchronously(plugin, () -> {
 			String filename = "toggles.yml";
 			File global = new File(plugin.getDataFolder(), filename);
 			YamlConfiguration globalConfig = YamlConfiguration.loadConfiguration(global);
